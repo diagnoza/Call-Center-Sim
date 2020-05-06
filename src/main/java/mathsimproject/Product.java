@@ -1,6 +1,7 @@
 package mathsimproject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Product that is sent trough the system

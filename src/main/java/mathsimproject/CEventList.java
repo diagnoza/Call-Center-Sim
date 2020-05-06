@@ -11,6 +11,7 @@ import java.util.ArrayList;
  * @version %I%, %G%
  */
 public class CEventList implements CProcess {
+    // I believe the only reason it implements CProcess is to stop the loop (in start())
     /**
      * The time in the simulation
      */
@@ -26,7 +27,7 @@ public class CEventList implements CProcess {
 
     /**
      * Standard constructor
-     * Create an mathsimproject.CEventList object
+     * Create an CEventList object
      */
     public CEventList() {
         currentTime = 0;

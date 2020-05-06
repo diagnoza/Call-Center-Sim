@@ -43,18 +43,36 @@ public class Simulation {
         Queue consumersQ = new Queue();
         Queue corporateQ = new Queue();
 
-        Source consumerSrc = new Source(consumersQ, eventsList, "Consumers mathsimproject.Source");
-        Source corporateSrc = new Source(corporateQ, eventsList, "Corporate customers mathsimproject.Source");
+        Source consumerSrc = new Source(consumersQ, eventsList, "Consumers Source");
+        Source corporateSrc = new Source(corporateQ, eventsList, "Corporate customers Source");
 
         // not sure we need two of these?
-        Sink consumerSink = new Sink("Consumers mathsimproject.Sink");
-        Sink corporateSink = new Sink("Corporate customers mathsimproject.Sink");
+        Sink consumerSink = new Sink("Consumers Sink");
+        Sink corporateSink = new Sink("Corporate customers Sink");
 
         Machine cpaConsumers = new Machine(consumersQ, consumerSink, eventsList, "CPA consumer");
         Machine cpaCorporate = new Machine(corporateQ, corporateSink, eventsList, "CPA corporate");
-        Machine cpaCorporate2 = new Machine(consumersQ, consumerSink, eventsList, "CPA corporate 2");
+        Machine cpaCorporate2 = new Machine(corporateQ, corporateSink, eventsList, "CPA corporate 2");
 
         eventsList.start(2000);
+
+        System.out.println("\n" + stringProductStamps(consumerSink));
     }
 
+    // WIP: we could use this to then produce a file for MATLAB to read
+    private static StringBuilder stringProductStamps(Sink sink) {
+        // not sure why getNumbers(), getTimes() & getEvents() are implemented like that
+        // why not just return numbers.clone()?
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        // all events have the same three timestamps (at least for now)
+        stringBuilder.append(" Call arrival, Call taken by CPA, Call ended\n");
+        for (Product p : sink.getProducts()) {
+            stringBuilder.append(p.getTimes());
+            stringBuilder.append("\n");
+        }
+
+        return stringBuilder;
+    }
 }

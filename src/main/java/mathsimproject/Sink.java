@@ -1,6 +1,7 @@
 package mathsimproject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A sink
@@ -20,6 +21,7 @@ public class Sink implements ProductAcceptor {
     private ArrayList<Double> times;
     private ArrayList<String> events;
     private ArrayList<String> stations;
+
     /**
      * Counter to number products
      */
@@ -87,5 +89,13 @@ public class Sink implements ProductAcceptor {
         String[] tmp = new String[stations.size()];
         tmp = stations.toArray(tmp);
         return tmp;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public List<Product> getProducts() {
+        return products;
     }
 }
