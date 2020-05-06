@@ -1,3 +1,5 @@
+package mathsimproject;
+
 /**
  * Machine in a factory
  *
@@ -47,7 +49,7 @@ public class Machine implements CProcess, ProductAcceptor {
      * Constructor
      * Service times are exponentially distributed with mean 30
      *
-     * @param q Queue from which the machine has to take products
+     * @param q mathsimproject.Queue from which the machine has to take products
      * @param s Where to send the completed products
      * @param e Eventlist that will manage events
      * @param n The name of the machine
@@ -66,7 +68,7 @@ public class Machine implements CProcess, ProductAcceptor {
      * Constructor
      * Service times are exponentially distributed with specified mean
      *
-     * @param q Queue from which the machine has to take products
+     * @param q mathsimproject.Queue from which the machine has to take products
      * @param s Where to send the completed products
      * @param e Eventlist that will manage events
      * @param n The name of the machine
@@ -86,7 +88,7 @@ public class Machine implements CProcess, ProductAcceptor {
      * Constructor
      * Service times are pre-specified
      *
-     * @param q  Queue from which the machine has to take products
+     * @param q  mathsimproject.Queue from which the machine has to take products
      * @param s  Where to send the completed products
      * @param e  Eventlist that will manage events
      * @param n  The name of the machine
@@ -112,7 +114,7 @@ public class Machine implements CProcess, ProductAcceptor {
      */
     public void execute(int type, double tme) {
         // show arrival
-        System.out.println("Product finished at time = " + tme);
+        System.out.println("Product finished (by " + name + ") at time = " + tme);
         // Remove product from system
         product.stamp(tme, "Production complete", name);
         sink.giveProduct(product);
@@ -148,7 +150,7 @@ public class Machine implements CProcess, ProductAcceptor {
 
     /**
      * Starting routine for the production
-     * Start the handling of the current product with an exponentionally distributed processingtime with average 30
+     * Start the handling of the current product with an exponentially distributed processing time with average 30
      * This time is placed in the eventlist
      */
     private void startProduction() {
@@ -161,6 +163,7 @@ public class Machine implements CProcess, ProductAcceptor {
             // set status to busy
             status = 'b';
         } else {
+            // lws: unsure what this is..
             if (processingTimes.length > procCnt) {
                 eventlist.add(this, 0, eventlist.getTime() + processingTimes[procCnt]); //target,type,time
                 // set status to busy

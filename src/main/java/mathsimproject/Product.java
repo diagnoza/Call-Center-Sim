@@ -1,7 +1,9 @@
+package mathsimproject;
+
 import java.util.ArrayList;
 
 /**
- * Product that is send trough the system
+ * Product that is sent trough the system
  *
  * @author Joel Karel
  * @version %I%, %G%

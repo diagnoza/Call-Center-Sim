@@ -1,3 +1,5 @@
+package mathsimproject;
+
 /**
  * Blueprint for accepting products
  * Classes that implement this interface can accept products

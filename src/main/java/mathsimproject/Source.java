@@ -1,3 +1,5 @@
+package mathsimproject;
+
 /**
  * A source of products
  * This class implements CProcess so that it can execute events.
@@ -12,7 +14,7 @@ public class Source implements CProcess {
      */
     private CEventList list;
     /**
-     * Queue that buffers products for the machine
+     * mathsimproject.Queue that buffers products for the machine
      */
     private ProductAcceptor queue;
     /**
@@ -90,7 +92,7 @@ public class Source implements CProcess {
     @Override
     public void execute(int type, double tme) {
         // show arrival
-        System.out.println("Arrival at time = " + tme);
+        System.out.println("Arrival (" + name + ") at time = " + tme);
         // give arrived product to queue
         Product p = new Product();
         p.stamp(tme, "Creation", name);

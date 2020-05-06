@@ -1,3 +1,5 @@
+package mathsimproject;
+
 import java.util.ArrayList;
 
 /**
@@ -24,7 +26,7 @@ public class CEventList implements CProcess {
 
     /**
      * Standard constructor
-     * Create an CEventList object
+     * Create an mathsimproject.CEventList object
      */
     public CEventList() {
         currentTime = 0;

@@ -1,3 +1,5 @@
+package mathsimproject;
+
 import java.util.ArrayList;
 
 /**
@@ -37,7 +39,7 @@ public class Queue implements ProductAcceptor {
                 row.remove(0);// Remove it from the queue
                 return true;
             } else {
-                return false; // Machine rejected; don't queue request
+                return false; // mathsimproject.Machine rejected; don't queue request
             }
         } else {
             requests.add(machine);

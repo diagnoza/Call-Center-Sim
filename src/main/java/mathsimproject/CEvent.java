@@ -1,3 +1,5 @@
+package mathsimproject;
+
 /**
  * Event class
  * Events that facilitate changes in the simulation
