@@ -1,70 +1,81 @@
 package mathsimproject;
 
 import java.util.ArrayList;
-
 /**
- * Product that is sent trough the system
- *
- * @author Joel Karel
- * @version %I%, %G%
+ *	Product that is send trough the system
+ *	@author Joel Karel
+ *	@version %I%, %G%
  */
-class Product {
-    /**
-     * Stamps for the products
-     */
-    private ArrayList<Double> times;
-    private ArrayList<String> events;
-    private ArrayList<String> stations;
+class Product
+{
+	/** Stamps for the products */
+	private ArrayList<Double> times;
+	private ArrayList<String> events;
+	private ArrayList<String> stations;
+	private boolean corporate;
+	
+	/** 
+	*	Constructor for the product
+	*	Mark the time at which it is created
+	*	@param create The current time
+	*/
+	public Product(boolean c)
+	{
+		times = new ArrayList<>();
+		events = new ArrayList<>();
+		stations = new ArrayList<>();
+		corporate = c;
+	}
+	
+	
+	public void stamp(double time,String event,String station)
+	{
+		times.add(time);
+		events.add(event);
+		stations.add(station);
+	}
+	
+	public ArrayList<Double> getTimes()
+	{
+		return times;
+	}
 
-    /**
-     * Constructor for the product
-     * Mark the time at which it is created
-     *
-     * @param create The current time
-     */
-    public Product() {
-        times = new ArrayList<>();
-        events = new ArrayList<>();
-        stations = new ArrayList<>();
-    }
+	public ArrayList<String> getEvents()
+	{
+		return events;
+	}
 
+	public ArrayList<String> getStations()
+	{
+		return stations;
+	}
 
-    public void stamp(double time, String event, String station) {
-        times.add(time);
-        events.add(event);
-        stations.add(station);
-    }
+	public boolean isCorporate() {
+		return corporate;
+	}
 
-    public ArrayList<Double> getTimes() {
-        return times;
-    }
+	public double[] getTimesAsArray()
+	{
+		times.trimToSize();
+		double[] tmp = new double[times.size()];
+		for (int i=0; i < times.size(); i++)
+		{
+			tmp[i] = (times.get(i)).doubleValue();
+		}
+		return tmp;
+	}
 
-    public ArrayList<String> getEvents() {
-        return events;
-    }
+	public String[] getEventsAsArray()
+	{
+		String[] tmp = new String[events.size()];
+		tmp = events.toArray(tmp);
+		return tmp;
+	}
 
-    public ArrayList<String> getStations() {
-        return stations;
-    }
-
-    public double[] getTimesAsArray() {
-        times.trimToSize();
-        double[] tmp = new double[times.size()];
-        for (int i = 0; i < times.size(); i++) {
-            tmp[i] = (times.get(i)).doubleValue();
-        }
-        return tmp;
-    }
-
-    public String[] getEventsAsArray() {
-        String[] tmp = new String[events.size()];
-        tmp = events.toArray(tmp);
-        return tmp;
-    }
-
-    public String[] getStationsAsArray() {
-        String[] tmp = new String[stations.size()];
-        tmp = stations.toArray(tmp);
-        return tmp;
-    }
+	public String[] getStationsAsArray()
+	{
+		String[] tmp = new String[stations.size()];
+		tmp = stations.toArray(tmp);
+		return tmp;
+	}
 }
