@@ -7,6 +7,14 @@
     <groupId>mathsimproject</groupId>
     <artifactId>math-sim-project</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.4.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <name>Mathematical Simulation java project</name>
 
