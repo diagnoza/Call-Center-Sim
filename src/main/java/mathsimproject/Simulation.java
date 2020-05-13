@@ -1,5 +1,7 @@
 package mathsimproject;
 
+import java.util.Random;
+
 /**
  * Example program for using eventlists
  *
@@ -15,6 +17,9 @@ public class Simulation {
     public Sink sink;
     public Machine mach;
 
+    // For testing purposes we want to have our own Random, that way we can have a fixed seed and test that
+    // code changes don't break anything
+    public static Random random;
 
     /**
      * @param args the command line arguments
@@ -38,6 +43,10 @@ public class Simulation {
 
 
     private static void run() {
+        // for testing purposes we want to have our own Random so we can set a fixed seed
+        random = new Random();
+        random.setSeed(22357L);
+
         CEventList eventsList = new CEventList();
 
         Queue consumersQ = new Queue();

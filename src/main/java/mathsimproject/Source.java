@@ -114,7 +114,8 @@ public class Source implements CProcess {
 
     public static double drawRandomExponential(double mean) {
         // draw a [0,1] uniform distributed number
-        double u = Math.random();
+        double u = Simulation.random.nextDouble();
+        //double u = Math.random();
         // Convert it into a exponentially distributed random variate with mean 33
         double res = -mean * Math.log(u);
         return res;
