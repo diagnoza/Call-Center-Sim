@@ -52,8 +52,8 @@ public class Simulation {
         Queue consumersQ = new Queue();
         Queue corporateQ = new Queue();
 
-        Source consumerSrc = new Source(consumersQ, eventsList, "Consumers Source");
-        Source corporateSrc = new Source(corporateQ, eventsList, "Corporate Source");
+        Source consumerSrc = new Source(consumersQ, eventsList, "Consumer Source");
+        Source corporateSrc = new Source(corporateQ, eventsList, "Corporate Source", 30);
 
         Sink allCustomersSink = new Sink("Customers Sink");
 

@@ -16,6 +16,7 @@ class Product {
     private ArrayList<Double> times;
     private ArrayList<String> events;
     private ArrayList<String> stations;
+    private boolean corporate;
 
     /**
      * Constructor for the product
@@ -23,10 +24,11 @@ class Product {
      *
      * @param create The current time
      */
-    public Product() {
+    public Product(boolean c) {
         times = new ArrayList<>();
         events = new ArrayList<>();
         stations = new ArrayList<>();
+        corporate = c;
     }
 
 
@@ -48,7 +50,11 @@ class Product {
         return stations;
     }
 
-    public double[] getTimesAsArray() {
+    public boolean isCorporate() {
+		return corporate;
+	}
+
+	public double[] getTimesAsArray() {
         times.trimToSize();
         double[] tmp = new double[times.size()];
         for (int i = 0; i < times.size(); i++) {

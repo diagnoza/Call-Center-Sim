@@ -94,12 +94,27 @@ public class Source implements CProcess {
         // show arrival
         System.out.println("Arrival (" + name + ") at time = " + tme);
         // give arrived product to queue
-        Product p = new Product();
+        Product p = new Product(this.name.equals("CorporateSource"));
         p.stamp(tme, "Creation", name);
         queue.giveProduct(p);
         // generate duration
         if (meanArrTime > 0) {
-            double duration = drawRandomExponential(meanArrTime);
+            // This is hacky but the simplest way to do it as far as I'm concerned. Generates next arrival time based
+			// on type customer this source is for.
+			double duration = 0;
+			if (this.name.equals("Consumer Source")) {
+				double lambda_t = 2.0/60 + 1.8/60*Math.sin((54000 + tme)*2*Math.PI/86400);
+				duration = drawNonStationaryExponential(3.8/60, lambda_t);
+
+			} else if (this.name.equals("Corporate Source")){
+				if (tme >= 8*60*60 && tme <= 18*60*60)
+					duration = drawRandomExponential(60);
+				else
+					duration = drawRandomExponential(60/0.2);
+			} else {
+                throw new IllegalArgumentException("The name of the source has to be" +
+                        " \"Consumer Source\" or \"Corporate Source\"");
+            }
             // Create a new event in the eventlist
             list.add(this, 0, tme + duration); //target,type,time
         } else {
@@ -120,4 +135,17 @@ public class Source implements CProcess {
         double res = -mean * Math.log(u);
         return res;
     }
+
+    public static double drawNonStationaryExponential(double lambda_s, double lambda_t) {
+		// draw two [0,1] uniform distributed number
+		double u1 = Simulation.random.nextDouble();
+		double u2 = Simulation.random.nextDouble();
+
+		// Return exponentially distributed random variate
+		if (u1 <= lambda_t/lambda_s)
+			return -1/lambda_s*Math.log(u2);
+		// Draw again
+		else
+			return drawNonStationaryExponential(lambda_s, lambda_t);
+	}
 }

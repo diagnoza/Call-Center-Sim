@@ -139,7 +139,7 @@ public class Machine implements CProcess, ProductAcceptor {
             // mark starting time
             product.stamp(eventlist.getTime(), "Production started", name);
             // start production
-            startProduction();
+            startProduction(p.isCorporate());
             // Flag that the product has arrived
             return true;
         }
@@ -152,10 +152,15 @@ public class Machine implements CProcess, ProductAcceptor {
      * Start the handling of the current product with an exponentially distributed processing time with average 30
      * This time is placed in the eventlist
      */
-    private void startProduction() {
+    private void startProduction(boolean corporate) {
         // generate duration
         if (meanProcTime > 0) {
-            double duration = drawRandomExponential(meanProcTime);
+            double duration = 0;
+			if (corporate)
+				duration = drawTruncatedNormal(3.6*60, 1.2*60, 45);
+			else
+				duration = drawTruncatedNormal(1.2*60, 35, 25);
+
             // Create a new event in the eventlist
             double tme = eventlist.getTime();
             eventlist.add(this, 0, tme + duration); //target,type,time
@@ -182,4 +187,28 @@ public class Machine implements CProcess, ProductAcceptor {
         double res = -mean * Math.log(u);
         return res;
     }
+
+    /**
+	 *
+	 * @param mean Average
+	 * @param std Standard deviation
+	 * @param trunc Lower bound: Numbers lower than trunc will be rejected.
+	 * @return sample: a random variate from a truncated normal distribution by means of the Box-Muller Method and
+	 * 	 				Rejection Sampling
+	 */
+	public static double drawTruncatedNormal(double mean, double std, double trunc){
+		//Generate two random variates
+		double u1 = Simulation.random.nextDouble();
+		double u2 = Simulation.random.nextDouble();
+
+		// Generate standard normal samples with Box-Muller Method
+		double sample = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2*Math.PI * u2);
+		sample = mean + std*sample;
+
+		// Rejection Sampling: Repeat if the generated variate is too low.
+		if (sample >= trunc)
+			return sample;
+		else
+			return drawTruncatedNormal(mean, std, trunc);
+	}
 }
