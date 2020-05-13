@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author Joel Karel
  * @version %I%, %G%
  */
-public class Queue implements ProductAcceptor {
+public class Queue implements ProductAcceptor, RequestAcceptor {
     /**
      * List in which the products are kept
      */
@@ -66,5 +66,13 @@ public class Queue implements ProductAcceptor {
                 row.add(p); // Otherwise store it
         }
         return true;
+    }
+
+    public int getNumRequesters() {
+        return requests.size();
+    }
+
+    public int getNumProducts() {
+        return row.size();
     }
 }

@@ -50,9 +50,13 @@ public class Simulation {
         Sink consumerSink = new Sink("Consumers Sink");
         Sink corporateSink = new Sink("Corporate customers Sink");
 
+        CorporateManager corporateManager = new CorporateManager(corporateQ, consumersQ, 2);
+
         Machine cpaConsumers = new Machine(consumersQ, consumerSink, eventsList, "CPA consumer");
-        Machine cpaCorporate = new Machine(corporateQ, corporateSink, eventsList, "CPA corporate");
-        Machine cpaCorporate2 = new Machine(corporateQ, corporateSink, eventsList, "CPA corporate 2");
+        Machine cpaCorporate = new Machine(corporateManager, corporateSink, eventsList, "CPA corporate");
+        Machine cpaCorporate2 = new Machine(corporateManager, corporateSink, eventsList, "CPA corporate 2");
+        Machine cpaCorporate3 = new Machine(corporateManager, corporateSink, eventsList, "CPA corporate 3");
+        Machine cpaCorporate4 = new Machine(corporateManager, corporateSink, eventsList, "CPA corporate 4");
 
         eventsList.start(2000);
 
