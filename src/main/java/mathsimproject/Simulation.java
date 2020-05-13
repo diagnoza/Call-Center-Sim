@@ -53,23 +53,21 @@ public class Simulation {
         Queue corporateQ = new Queue();
 
         Source consumerSrc = new Source(consumersQ, eventsList, "Consumers Source");
-        Source corporateSrc = new Source(corporateQ, eventsList, "Corporate customers Source");
+        Source corporateSrc = new Source(corporateQ, eventsList, "Corporate Source");
 
-        // not sure we need two of these?
-        Sink consumerSink = new Sink("Consumers Sink");
-        Sink corporateSink = new Sink("Corporate customers Sink");
+        Sink allCustomersSink = new Sink("Customers Sink");
 
         CorporateManager corporateManager = new CorporateManager(corporateQ, consumersQ, 2);
 
-        Machine cpaConsumers = new Machine(consumersQ, consumerSink, eventsList, "CPA consumer");
-        Machine cpaCorporate = new Machine(corporateManager, corporateSink, eventsList, "CPA corporate");
-        Machine cpaCorporate2 = new Machine(corporateManager, corporateSink, eventsList, "CPA corporate 2");
-        Machine cpaCorporate3 = new Machine(corporateManager, corporateSink, eventsList, "CPA corporate 3");
-        Machine cpaCorporate4 = new Machine(corporateManager, corporateSink, eventsList, "CPA corporate 4");
+        Machine cpaConsumers = new Machine(consumersQ, allCustomersSink, eventsList, "CPA consumer");
+        Machine cpaCorporate = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate");
+        Machine cpaCorporate2 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate 2");
+        Machine cpaCorporate3 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate 3");
+        Machine cpaCorporate4 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate 4");
 
         eventsList.start(2000);
 
-        System.out.println("\n" + stringProductStamps(consumerSink));
+        System.out.println("\n" + stringProductStamps(allCustomersSink));
     }
 
     // WIP: we could use this to then produce a file for MATLAB to read
@@ -83,6 +81,7 @@ public class Simulation {
         stringBuilder.append(" Call arrival, Call taken by CPA, Call ended\n");
         for (Product p : sink.getProducts()) {
             stringBuilder.append(p.getTimes());
+            stringBuilder.append(p.getStations());
             stringBuilder.append("\n");
         }
 
