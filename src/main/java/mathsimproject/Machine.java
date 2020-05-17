@@ -45,6 +45,21 @@ public class Machine implements CProcess, ProductAcceptor {
     private int procCnt;
 
     /**
+     * Machine starts working at this timepoint
+     */
+    private double startTime;
+    /**
+     * Machine stops working at this timepoint
+     */
+    private double finishTime;
+
+    /**
+     * The simulation runs for this number of days
+     */
+    private int numDays;
+
+
+    /**
      * Constructor
      * Service times are exponentially distributed with mean 30
      *
@@ -53,13 +68,15 @@ public class Machine implements CProcess, ProductAcceptor {
      * @param e Eventlist that will manage events
      * @param n The name of the machine
      */
-    public Machine(RequestAcceptor q, ProductAcceptor s, CEventList e, String n) {
+    public Machine(RequestAcceptor q, ProductAcceptor s, CEventList e, String n, double start, double finish) {
         status = 'i';
         queue = q;
         sink = s;
         eventlist = e;
         name = n;
         meanProcTime = 30;
+        startTime = start;
+        finishTime = finish;
         queue.askProduct(this);
     }
 
@@ -133,7 +150,9 @@ public class Machine implements CProcess, ProductAcceptor {
     @Override
     public boolean giveProduct(Product p) {
         // Only accept something if the machine is idle
-        if (status == 'i') {
+        double tme = eventlist.getTime();
+        if (status == 'i' && ((startTime > tme%(24*60*60) && finishTime <= tme%(24*60*60)) ||
+                (startTime == 22*60*60 && finishTime == 6*60*60 && (tme%(24*60*60) > 22*60*60 || tme%(24*60*60) <= 6*60*60)))) {
             // accept the product
             product = p;
             // mark starting time
@@ -153,16 +172,17 @@ public class Machine implements CProcess, ProductAcceptor {
      * This time is placed in the eventlist
      */
     private void startProduction(boolean corporate) {
+        double tme = eventlist.getTime();
+
         // generate duration
         if (meanProcTime > 0) {
             double duration = 0;
-			if (corporate)
-				duration = drawTruncatedNormal(3.6*60, 1.2*60, 45);
-			else
-				duration = drawTruncatedNormal(1.2*60, 35, 25);
+            if (corporate)
+                duration = drawTruncatedNormal(3.6 * 60, 1.2 * 60, 45);
+            else
+                duration = drawTruncatedNormal(1.2 * 60, 35, 25);
 
             // Create a new event in the eventlist
-            double tme = eventlist.getTime();
             eventlist.add(this, 0, tme + duration); //target,type,time
             // set status to busy
             status = 'b';
@@ -175,8 +195,8 @@ public class Machine implements CProcess, ProductAcceptor {
                 procCnt++;
             } else {
                 eventlist.stop();
+                }
             }
-        }
     }
 
     public static double drawRandomExponential(double mean) {

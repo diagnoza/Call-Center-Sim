@@ -59,13 +59,31 @@ public class Simulation {
 
         CorporateManager corporateManager = new CorporateManager(corporateQ, consumersQ, 2);
 
-        Machine cpaConsumers = new Machine(consumersQ, allCustomersSink, eventsList, "CPA consumer");
-        Machine cpaCorporate = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate");
-        Machine cpaCorporate2 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate 2");
-        Machine cpaCorporate3 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate 3");
-        Machine cpaCorporate4 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate 4");
+        // Shift: 6am - 2pm
+        Machine cpaConsumers = new Machine(consumersQ, allCustomersSink, eventsList, "CPA consumer", 6*60*60, 14*60*60);
+        Machine cpaConsumers2 = new Machine(consumersQ, allCustomersSink, eventsList, "CPA consumer2", 6*60*60, 14*60*60);
+        Machine cpaConsumers3= new Machine(consumersQ, allCustomersSink, eventsList, "CPA consumer3", 6*60*60, 14*60*60);
+        Machine cpaCorporate = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate", 6*60*60, 14*60*60);
+        Machine cpaCorporate2 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate2", 6*60*60, 14*60*60);
+        Machine cpaCorporate3 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate3", 6*60*60, 14*60*60);
 
-        eventsList.start(2000);
+        // Shift: 2pm - 10pm
+        Machine cpaConsumers4 = new Machine(consumersQ, allCustomersSink, eventsList, "CPA consumer",  14*60*60, 22*60*60);
+        Machine cpaConsumers5 = new Machine(consumersQ, allCustomersSink, eventsList, "CPA consumer2",  14*60*60, 22*60*60);
+        Machine cpaConsumers6 = new Machine(consumersQ, allCustomersSink, eventsList, "CPA consumer3",  14*60*60, 22*60*60);
+        Machine cpaCorporate7 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate", 14*60*60, 22*60*60);
+        Machine cpaCorporate8 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate2", 14*60*60, 22*60*60);
+        Machine cpaCorporate9 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate3", 14*60*60, 22*60*60);
+
+        // Shift: 10pm - 6am
+        Machine cpaConsumers10 = new Machine(consumersQ, allCustomersSink, eventsList, "CPA consumer", 22*60*60, 6*60*60);
+        Machine cpaConsumers11 = new Machine(consumersQ, allCustomersSink, eventsList, "CPA consumer2",  22*60*60, 6*60*60);
+        Machine cpaConsumers12 = new Machine(consumersQ, allCustomersSink, eventsList, "CPA consumer3",  22*60*60, 6*60*60);
+        Machine cpaCorporate13 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate", 22*60*60, 6*60*60);
+        Machine cpaCorporate14 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate2", 22*60*60, 6*60*60);
+        Machine cpaCorporate15 = new Machine(corporateManager, allCustomersSink, eventsList, "CPA corporate3", 22*60*60, 6*60*60);
+
+        eventsList.start(2*24*60*60);
 
         System.out.println("\n" + stringProductStamps(allCustomersSink));
     }

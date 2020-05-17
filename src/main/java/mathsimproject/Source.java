@@ -32,6 +32,12 @@ public class Source implements CProcess {
     /**
      * Interarrival time iterator
      */
+
+    /**
+     * The simulation runs for this number of days
+     */
+    private int numDays;
+
     private int interArrCnt;
 
     /**
@@ -107,7 +113,7 @@ public class Source implements CProcess {
 				duration = drawNonStationaryExponential(3.8/60, lambda_t);
 
 			} else if (this.name.equals("Corporate Source")){
-				if (tme >= 8*60*60 && tme <= 18*60*60)
+				if (tme%(24*60*60) >= 8*60*60 && tme%(24*60*60) <= 18*60*60)
 					duration = drawRandomExponential(60);
 				else
 					duration = drawRandomExponential(60/0.2);
