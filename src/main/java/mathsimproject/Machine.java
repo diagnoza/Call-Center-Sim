@@ -58,6 +58,7 @@ public class Machine implements CProcess, ProductAcceptor {
      */
     private int numDays;
 
+    private boolean stop;
 
     /**
      * Constructor
@@ -68,15 +69,14 @@ public class Machine implements CProcess, ProductAcceptor {
      * @param e Eventlist that will manage events
      * @param n The name of the machine
      */
-    public Machine(RequestAcceptor q, ProductAcceptor s, CEventList e, String n, double start, double finish) {
+    public Machine(RequestAcceptor q, ProductAcceptor s, CEventList e, String n) {
         status = 'i';
         queue = q;
         sink = s;
         eventlist = e;
         name = n;
         meanProcTime = 30;
-        startTime = start;
-        finishTime = finish;
+        stop = false;
         queue.askProduct(this);
     }
 
@@ -138,7 +138,8 @@ public class Machine implements CProcess, ProductAcceptor {
         // set machine status to idle
         status = 'i';
         // Ask the queue for products
-        queue.askProduct(this);
+        if (!stop)
+            queue.askProduct(this);
     }
 
     /**
@@ -151,8 +152,9 @@ public class Machine implements CProcess, ProductAcceptor {
     public boolean giveProduct(Product p) {
         // Only accept something if the machine is idle
         double tme = eventlist.getTime();
-        if (status == 'i' && ((startTime > tme%(24*60*60) && finishTime <= tme%(24*60*60)) ||
-                (startTime == 22*60*60 && finishTime == 6*60*60 && (tme%(24*60*60) > 22*60*60 || tme%(24*60*60) <= 6*60*60)))) {
+//        if (status == 'i' && ((tme%(24*60*60) > startTime && tme%(24*60*60) <= finishTime) ||
+//                (startTime == 22*60*60 && finishTime == 6*60*60 && (tme%(24*60*60) > 22*60*60 || tme%(24*60*60) <= 6*60*60)))) {
+        if (status == 'i') {
             // accept the product
             product = p;
             // mark starting time
@@ -231,4 +233,10 @@ public class Machine implements CProcess, ProductAcceptor {
 		else
 			return drawTruncatedNormal(mean, std, trunc);
 	}
+
+	public void stop() {
+	    this.stop = true;
+	    // this setting of busy here might be unnecessary
+	    this.status = 'b';
+    }
 }

@@ -54,7 +54,8 @@ public class Source implements CProcess {
         name = n;
         meanArrTime = 33;
         // put first event in list for initialization
-        list.add(this, 0, drawRandomExponential(meanArrTime)); //target,type,time
+        // we add the time at which we start our service (l.getTime())
+        list.add(this, 0, drawRandomExponential(meanArrTime) + l.getTime()); //target,type,time
     }
 
     /**
@@ -72,7 +73,8 @@ public class Source implements CProcess {
         name = n;
         meanArrTime = m;
         // put first event in list for initialization
-        list.add(this, 0, drawRandomExponential(meanArrTime)); //target,type,time
+        // we add the time at which we start our service (l.getTime())
+        list.add(this, 0, drawRandomExponential(meanArrTime) + l.getTime()); //target,type,time
     }
 
     /**

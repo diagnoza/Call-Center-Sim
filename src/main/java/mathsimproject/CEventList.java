@@ -29,8 +29,8 @@ public class CEventList implements CProcess {
      * Standard constructor
      * Create an CEventList object
      */
-    public CEventList() {
-        currentTime = 0;
+    public CEventList(double startingTime) {
+        currentTime = startingTime;
         stopFlag = false;
         events = new ArrayList<>();
     }
