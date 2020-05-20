@@ -100,7 +100,7 @@ public class Source implements CProcess {
     @Override
     public void execute(int type, double tme) {
         // show arrival
-        System.out.println("Arrival (" + name + ") at time = " + tme);
+//        System.out.println("Arrival (" + name + ") at time = " + tme);
         // give arrived product to queue
         Product p = new Product(this.name.equals("Corporate Source"));
         p.stamp(tme, "Creation", name);

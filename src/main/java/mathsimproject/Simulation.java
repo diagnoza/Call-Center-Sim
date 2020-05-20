@@ -101,7 +101,7 @@ public class Simulation {
         // TODO: requirements aren't met if length of run is low (few days). Something wrong with STARTING_TIME?
         //       nothing wrong?
         eventsList.start(STARTING_TIME + 100 * 24 * 60 * 60);
-        System.out.println("\n" + stringProductStamps(allSink));
+//        System.out.println("\n" + stringProductStamps(allSink));
 
         Map<String, Double> reqs = computeRequirements(allSink);
 
