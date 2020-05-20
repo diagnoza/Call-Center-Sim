@@ -88,7 +88,7 @@ public class Simulation {
 
         allSink = new Sink("Customers Sink");
 
-        corporateManager = new CorporateManager(corporateQ, consumersQ, 3);
+        corporateManager = new CorporateManager(corporateQ, consumersQ, 2);
 
         hireCPAs(Cpa_Type.Corporate, 5, "CPA corporate 6am-2pm", 6 * 60 * 60);
         hireCPAs(Cpa_Type.Corporate, 5, "CPA corporate 2pm-10pm", 14 * 60 * 60);
