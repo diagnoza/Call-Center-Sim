@@ -130,7 +130,7 @@ public class Machine implements CProcess, ProductAcceptor {
      */
     public void execute(int type, double tme) {
         // show arrival
-        System.out.println("Product finished (by " + name + ") at time = " + tme);
+//        System.out.println("Product finished (by " + name + ") at time = " + tme);
         // Remove product from system
         product.stamp(tme, "Production complete", name);
         sink.giveProduct(product);
