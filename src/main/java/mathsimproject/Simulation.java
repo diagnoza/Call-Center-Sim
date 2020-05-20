@@ -1,12 +1,9 @@
 package mathsimproject;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-
-import static java.lang.Double.NaN;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.*;
 
 /**
  * Example program for using eventlists
@@ -17,6 +14,11 @@ import static java.lang.Double.NaN;
 
 public class Simulation {
 
+    // For testing purposes we want to have our own Random, that way we can have a fixed seed and test that
+    // code changes don't break anything
+    public static Random random;
+    // Time at which we open our service for the first time
+    public final double STARTING_TIME = 6 * 60 * 60;
     public CEventList eventsList;
     public Queue consumersQ;
     public Queue corporateQ;
@@ -25,12 +27,50 @@ public class Simulation {
     public Sink allSink;
     public CorporateManager corporateManager;
 
-    // Time at which we open our service for the first time
-    public final double STARTING_TIME = 6*60*60;
+    // WIP: we could use this to then produce a file for MATLAB to read
+    private static StringBuilder stringProductStamps(Sink sink) {
+        // not sure why getNumbers(), getTimes() & getEvents() are implemented like that
+        // why not just return numbers.clone()?
 
-    // For testing purposes we want to have our own Random, that way we can have a fixed seed and test that
-    // code changes don't break anything
-    public static Random random;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        // all events have the same three timestamps (at least for now)
+        stringBuilder.append(" Call arrival, Call taken by CPA, Call ended\n");
+        for (Product p : sink.getProducts()) {
+            stringBuilder.append(p.getTimes());
+            stringBuilder.append(p.getStations());
+            stringBuilder.append("\n");
+        }
+
+        return stringBuilder;
+    }
+
+    private static void exportToCsv(List<Product> products, String filename) {
+
+        try (PrintWriter writer = new PrintWriter(new File(filename))) {
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(" Call arrival, Call taken by CPA, Call ended, handled by:\n");
+            for (Product p : products) {
+                sb.append(p.getTimes().get(0));
+                sb.append(",");
+                sb.append(p.getTimes().get(1));
+                sb.append(",");
+                sb.append(p.getTimes().get(2));
+                sb.append(",");
+                sb.append(p.getStations().get(1));
+                sb.append("\n");
+            }
+
+
+            writer.write(sb.toString());
+
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
 
     public void run() {
         // for testing purposes we want to have our own Random so we can set a fixed seed
@@ -50,28 +90,42 @@ public class Simulation {
 
         corporateManager = new CorporateManager(corporateQ, consumersQ, 3);
 
-        hireCPAs(Cpa_Type.Corporate, 5, "CPA corporate 6am-2pm", 6*60*60);
-        hireCPAs(Cpa_Type.Corporate,5, "CPA corporate 2pm-10pm", 14*60*60);
-        hireCPAs(Cpa_Type.Corporate,3, "CPA corporate 10pm-6am", 22*60*60);
-        hireCPAs(Cpa_Type.Consumer, 8, "CPA consumer 6am-2pm", 6*60*60);
-        hireCPAs(Cpa_Type.Consumer,8, "CPA consumer 2pm-10pm", 14*60*60);
-        hireCPAs(Cpa_Type.Consumer,5, "CPA consumer 10pm-6am", 22*60*60);
+        hireCPAs(Cpa_Type.Corporate, 5, "CPA corporate 6am-2pm", 6 * 60 * 60);
+        hireCPAs(Cpa_Type.Corporate, 5, "CPA corporate 2pm-10pm", 14 * 60 * 60);
+        hireCPAs(Cpa_Type.Corporate, 3, "CPA corporate 10pm-6am", 22 * 60 * 60);
+        hireCPAs(Cpa_Type.Consumer, 8, "CPA consumer 6am-2pm", 6 * 60 * 60);
+        hireCPAs(Cpa_Type.Consumer, 8, "CPA consumer 2pm-10pm", 14 * 60 * 60);
+        hireCPAs(Cpa_Type.Consumer, 5, "CPA consumer 10pm-6am", 22 * 60 * 60);
 
         // 30 days: 30*24 + 6 hours (when we open our service for the first time)
         // TODO: requirements aren't met if length of run is low (few days). Something wrong with STARTING_TIME?
         //       nothing wrong?
-        eventsList.start(STARTING_TIME + 30*24*60*60);
+        eventsList.start(STARTING_TIME + 100 * 24 * 60 * 60);
         System.out.println("\n" + stringProductStamps(allSink));
 
         Map<String, Double> reqs = computeRequirements(allSink);
 
         System.out.println("Requirements: " + reqs + "\n");
         System.out.println("Meets requirements: " + verifyRequirements(reqs));
+
+
+        // export data for analysis in Matlab
+        ArrayList<Product> consumers = new ArrayList<>();
+        ArrayList<Product> corporate = new ArrayList<>();
+        for (Product p : allSink.getProducts()) {
+            if (p.getStations().get(0).equals("Consumer Source"))
+                consumers.add(p);
+            else
+                corporate.add(p);
+        }
+        exportToCsv(consumers, "consumers.csv");
+        exportToCsv(corporate, "corporate.csv");
     }
 
     /**
      * Schedules events for the creation of machines for the first time. These events in turn will schedule more events
      * for the destruction of machines at the end of their shift and their re-start the next day.
+     *
      * @param type
      * @param numberCPAs
      * @param shiftName
@@ -93,36 +147,17 @@ public class Simulation {
         }
     }
 
-    // WIP: we could use this to then produce a file for MATLAB to read
-    private static StringBuilder stringProductStamps(Sink sink) {
-        // not sure why getNumbers(), getTimes() & getEvents() are implemented like that
-        // why not just return numbers.clone()?
-
-        StringBuilder stringBuilder = new StringBuilder();
-
-        // all events have the same three timestamps (at least for now)
-        stringBuilder.append(" Call arrival, Call taken by CPA, Call ended\n");
-        for (Product p : sink.getProducts()) {
-            stringBuilder.append(p.getTimes());
-            stringBuilder.append(p.getStations());
-            stringBuilder.append("\n");
-        }
-
-        return stringBuilder;
-    }
-
-
     /**
      * Computes the requirements for the different times specified in project PDF
+     *
      * @param sink
-     * @return:
-     *  e.g.:
-     *     {
-     *         "Corporate 3 min": 0.54,
-     *         "Consumer 5 min": 0.23124,
-     *         "Consumer 10 min": 0.23164,
-     *         "Corporate 7 min": 0.68
-     *     }
+     * @return: e.g.:
+     * {
+     * "Corporate 3 min": 0.54,
+     * "Consumer 5 min": 0.23124,
+     * "Consumer 10 min": 0.23164,
+     * "Corporate 7 min": 0.68
+     * }
      */
     private Map<String, Double> computeRequirements(Sink sink) {
         // NOTE: This is probably not a good way of doing it. I just started writing one of the cases with streams and
@@ -151,8 +186,8 @@ public class Simulation {
                 .filter(p -> p.getTimes().get(1) - p.getTimes().get(0) < 7 * 60)
                 .count();
 
-        retMap.put("Corporate 3 min", corpLess3min/totalCorporate);
-        retMap.put("Corporate 7 min", corpLess7min/totalCorporate);
+        retMap.put("Corporate 3 min", corpLess3min / totalCorporate);
+        retMap.put("Corporate 7 min", corpLess7min / totalCorporate);
 
         // Consumer requirements:
         double totalConsumers = sink.getProducts()
@@ -170,8 +205,8 @@ public class Simulation {
                 .filter(p -> p.getTimes().get(1) - p.getTimes().get(0) < 10 * 60)
                 .count();
 
-        retMap.put("Consumer 5 min", conLess5min/totalConsumers);
-        retMap.put("Consumer 10 min", conLess10min/totalConsumers);
+        retMap.put("Consumer 5 min", conLess5min / totalConsumers);
+        retMap.put("Consumer 10 min", conLess10min / totalConsumers);
 
         return retMap;
     }
@@ -193,6 +228,6 @@ public class Simulation {
 
         return true;
     }
-
 }
+
 
